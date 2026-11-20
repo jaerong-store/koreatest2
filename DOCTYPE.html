@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5f6fa">
+<title>국어 문법 문제은행</title>
+<style>
+:root {
+  --bg:#f5f6fa; --card:#fff; --text:#20232b; --muted:#858b98;
+  --line:#e8eaf0; --primary:#4569e8; --primary-light:#edf1ff;
+  --green:#218b68; --green-light:#e9f7f1; --red:#d94d58;
+  --red-light:#fff0f0; --orange:#b97820; --orange-light:#fff5e6;
+  --radius:18px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:15px;line-height:1.65}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #9aafff;outline-offset:2px}
+.app{max-width:1100px;margin:auto;padding:24px 22px 70px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:25px}
+.brand{font-weight:800;font-size:21px;letter-spacing:-.8px}
+.brand span{color:var(--primary)}
+.header-actions{display:flex;gap:8px}
+.btn{border:0;border-radius:11px;padding:11px 17px;font-weight:650;background:#edf0f5;color:#424957;transition:.15s}
+.btn:hover{filter:brightness(.97)}
+.btn.primary{background:var(--primary);color:white}
+.btn.danger{background:var(--red-light);color:var(--red)}
+.btn.success{background:var(--green-light);color:var(--green)}
+.btn.small{padding:7px 11px;font-size:13px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:23px;margin-bottom:17px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:29px;line-height:1.3;letter-spacing:-1.2px;margin-bottom:9px}
+h2{font-size:21px;letter-spacing:-.5px;margin-bottom:15px}
+h3{font-size:16px;margin-bottom:10px}
+.sub{color:var(--muted);font-size:14px}
+.notice{background:var(--primary-light);color:#425ba9;border-radius:12px;padding:12px 15px;font-size:13px;margin:16px 0 23px}
+.notice.warning{background:var(--orange-light);color:#8b5b18}
+.notice.green{background:var(--green-light);color:#217457}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}
+.stat{background:#f8f9fc;border-radius:13px;padding:15px}
+.stat strong{font-size:24px;display:block;letter-spacing:-1px}
+.stat span{font-size:12px;color:var(--muted)}
+.set-card{border:1px solid var(--line);border-radius:15px;padding:19px;display:flex;flex-direction:column;gap:9px}
+.set-card h3{margin:0;font-size:17px}
+.set-meta{font-size:12px;color:var(--muted)}
+.tag{display:inline-block;border-radius:7px;padding:3px 8px;background:#f0f2f6;color:#626a79;font-size:11px;margin:2px}
+.tag.blue{background:var(--primary-light);color:var(--primary)}
+.tag.red{background:var(--red-light);color:var(--red)}
+.tag.green{background:var(--green-light);color:var(--green)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.hidden{display:none!important}
+.tabs{display:flex;gap:7px;overflow-x:auto;margin-bottom:20px;padding-bottom:4px}
+.tab{white-space:nowrap;border:0;border-radius:10px;padding:10px 15px;background:#e9ebf1;color:#646b78;font-weight:650}
+.tab.active{background:var(--primary);color:white}
+.field{margin:13px 0}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+input,textarea,select{width:100%;border:1px solid #dfe2e9;border-radius:10px;padding:11px 12px;background:white;color:var(--text)}
+textarea{min-height:180px;resize:vertical;font-family:monospace;font-size:13px;line-height:1.5}
+.question-top{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-size:13px;margin-bottom:18px}
+.progress{height:6px;border-radius:20px;background:#eceef3;overflow:hidden;margin:12px 0 22px}
+.progress div{height:100%;background:var(--primary);transition:width .2s}
+.question-title{font-size:21px;font-weight:750;line-height:1.55;letter-spacing:-.4px;margin:17px 0}
+.passage{background:#f7f8fb;border-radius:12px;padding:17px;white-space:pre-wrap;font-size:14px;margin:16px 0}
+.choices{display:grid;gap:10px;margin:23px 0}
+.choice{display:flex;align-items:center;gap:12px;padding:15px;border:1px solid var(--line);border-radius:13px;background:white;text-align:left;width:100%;min-height:56px;color:var(--text)}
+.choice.selected{border:2px solid var(--primary);background:var(--primary-light);padding:14px}
+.choice .num{width:27px;height:27px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:#f0f1f5;font-weight:700;font-size:13px}
+.choice.selected .num{background:var(--primary);color:white}
+.answer-input{margin:20px 0}
+.question-nav{display:flex;flex-wrap:wrap;gap:7px;margin:20px 0}
+.qnum{width:39px;height:39px;border:1px solid var(--line);border-radius:10px;background:white;color:#777}
+.qnum.answered{background:var(--primary-light);border-color:#cbd5ff;color:var(--primary)}
+.qnum.current{outline:2px solid var(--primary)}
+.qnum.wrong{background:var(--red-light);color:var(--red)}
+.timer{font-variant-numeric:tabular-nums;font-weight:750;font-size:16px}
+.timer.warning{color:var(--red)}
+.result-score{font-size:48px;font-weight:850;letter-spacing:-2px;color:var(--primary)}
+.result-item{border-top:1px solid var(--line);padding:18px 0}
+.result-item .answer{font-size:13px;margin-top:8px}
+.good{color:var(--green);font-weight:750}
+.bad{color:var(--red);font-weight:750}
+.concept-list{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}
+.wrong-card{border:1px solid var(--line);border-radius:14px;padding:17px;margin:12px 0}
+.wrong-card h3{font-size:15px;line-height:1.5}
+.modal-back{position:fixed;inset:0;background:#0007;display:grid;place-items:center;padding:18px;z-index:10}
+.modal{background:white;border-radius:20px;padding:25px;width:min(430px,100%);max-height:90vh;overflow:auto}
+.modal input{margin:10px 0}
+.empty{text-align:center;padding:40px 15px;color:var(--muted)}
+.footer{text-align:center;color:#a0a4ae;font-size:12px;padding:25px 0}
+.category-bar{margin:12px 0}
+.category-bar .row{font-size:13px}
+.bar{height:8px;border-radius:10px;background:#eee;margin-top:6px;overflow:hidden}
+.bar span{display:block;height:100%;background:var(--green)}
+.review-question{padding:15px 0;border-bottom:1px solid var(--line)}
+.review-question:last-child{border:0}
+@media(max-width:650px){
+ .app{padding:15px 13px 45px}
+ header{align-items:flex-start}
+ .brand{font-size:18px}
+ .header-actions .btn{padding:8px 10px;font-size:12px}
+ h1{font-size:25px}
+ .card{padding:17px}
+ .grid{grid-template-columns:1fr}
+ .stats{gap:7px}
+ .stat{padding:12px}
+ .stat strong{font-size:21px}
+ .question-title{font-size:19px}
+ .choice{padding:13px}
+}
+@media print{
+ @page{size:A4;margin:15mm}
+ body{background:white;color:#111;font-size:11pt}
+ .app{max-width:none;padding:0}
+ header,.tabs,.no-print,.footer,.notice,.screen-only{display:none!important}
+ #printArea{display:block!important}
+ .print-header{text-align:center;border-bottom:2px solid #111;padding-bottom:13px;margin-bottom:20px}
+ .print-header h1{font-size:20pt}
+ .print-info{display:flex;justify-content:space-between;margin:12px 0 24px}
+ .print-grid{columns:2;column-gap:27px}
+ .print-question{break-inside:avoid;margin:0 0 20px;padding-bottom:12px}
+ .print-question h3{font-size:11pt}
+ .print-question p{font-size:10pt;white-space:pre-wrap}
+ .print-answer{border-bottom:1px solid #aaa;height:25px;margin-top:8px}
+ .print-choice{font-size:10pt;margin:4px 0}
+ .print-key{break-inside:avoid;border-bottom:1px solid #ddd;padding:10px 0}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="brand">국어 <span>문제은행</span></div>
+ <div class="header-actions">
+  <button class="btn small" onclick="showScreen('home')">홈</button>
+  <button class="btn small" onclick="parentEntry()">부모 화면</button>
+ </div>
+</header>
+
+<div class="tabs no-print" id="mainTabs">
+ <button class="tab active" data-screen="home" onclick="showScreen('home')">학습 홈</button>
+ <button class="tab" data-screen="wrong" onclick="showScreen('wrong')">오답노트</button>
+ <button class="tab" data-screen="review" onclick="parentEntry('review')">문항 검수</button>
+</div>
+
+<main id="homeScreen">
+ <h1>오늘의 국어 공부</h1>
+ <p class="sub">개념을 확인하고, 문제를 풀고, 틀린 문제를 다시 익혀 보세요.</p>
+ <div class="notice">홈 화면에 추가하면 기록이 더 오래 유지됩니다. 학습 기록은 현재 브라우저의 저장 공간에 보관됩니다.</div>
+ <div class="stats">
+  <div class="stat"><strong id="totalStudy">0</strong><span>누적 학습 횟수</span></div>
+  <div class="stat"><strong id="averageScore">-</strong><span>평균 점수</span></div>
+  <div class="stat"><strong id="wrongCount">0</strong><span>오답 문항</span></div>
+ </div>
+ <div class="row"><h2>문제 세트</h2><span class="sub" id="setCount"></span></div>
+ <div id="setList" class="grid"></div>
+ <div class="card" style="margin-top:22px">
+  <h3>학습 안내</h3>
+  <p class="sub">문제 세트를 선택하고 시험처럼 풀어 보세요. 제출하면 자동으로 채점하고 오답노트에 틀린 문제를 저장합니다.</p>
+  <div class="actions">
+   <button class="btn" onclick="showScreen('wrong')">오답노트 확인</button>
+   <button class="btn" onclick="parentEntry('review')">문항 검수하기</button>
+  </div>
+ </div>
+</main>
+
+<main id="quizScreen" class="hidden">
+ <div class="row">
+  <div>
+   <span class="tag blue" id="quizSubject"></span>
+   <h2 id="quizTitle" style="margin:8px 0 0"></h2>
+  </div>
+  <div class="timer" id="timer">00:00</div>
+ </div>
+ <div class="progress"><div id="progressBar"></div></div>
+ <div class="question-top">
+  <span id="questionNumber"></span>
+  <span id="questionType"></span>
+ </div>
+ <div class="card">
+  <div id="questionBadges"></div>
+  <div id="passage" class="passage hidden"></div>
+  <div class="question-title" id="stem"></div>
+  <div id="answerArea"></div>
+ </div>
+ <div class="row">
+  <button class="btn" onclick="moveQuestion(-1)">이전 문제</button>
+  <div class="actions">
+   <button class="btn" onclick="moveQuestion(1)">다음 문제</button>
+   <button class="btn primary" onclick="submitQuiz()">제출 및 채점</button>
+  </div>
+ </div>
+ <div class="question-nav" id="questionNav"></div>
+ <p class="sub" id="answerProgress"></p>
+</main>
+
+<main id="resultScreen" class="hidden">
+ <h1>학습 결과</h1>
+ <p class="sub" id="resultTitle"></p>
+ <div class="card">
+  <div class="result-score" id="score"></div>
+  <div class="sub" id="scoreDetail"></div>
+  <div class="stats">
+   <div class="stat"><strong id="correctNum">0</strong><span>정답</span></div>
+   <div class="stat"><strong id="incorrectNum">0</strong><span>오답</span></div>
+   <div class="stat"><strong id="elapsedTime">00:00</strong><span>풀이 시간</span></div>
+  </div>
+  <h3>카테고리별 정답률</h3>
+  <div id="categoryResults"></div>
+ </div>
+ <h2>문항별 결과 및 해설</h2>
+ <div id="resultDetails" class="card"></div>
+ <div class="actions no-print">
+  <button class="btn" onclick="showScreen('home')">홈으로</button>
+  <button class="btn primary" onclick="retakeCurrent()">다시 풀기</button>
+  <button class="btn" onclick="showScreen('wrong')">오답노트</button>
+ </div>
+</main>
+
+<main id="wrongScreen" class="hidden">
+ <h1>오답노트</h1>
+ <p class="sub">틀린 문제를 개념별로 모아 다시 학습할 수 있습니다.</p>
+ <div class="field">
+  <label>개념별 보기</label>
+  <select id="wrongFilter" onchange="renderWrong()"><option value="all">전체 개념</option></select>
+ </div>
+ <div id="wrongList"></div>
+</main>
+
+<main id="reviewScreen" class="hidden">
+ <h1>문항 검수</h1>
+ <p class="sub">부모가 승인한 문항만 학습자에게 출제됩니다.</p>
+ <div class="notice warning">검수 필요 문항은 교육과정, 정답, 해설 등을 확인한 뒤 승인해 주세요.</div>
+ <div class="row" style="margin-bottom:15px">
+  <span id="reviewStatus" class="sub"></span>
+  <button class="btn success" onclick="approveAll()">전체 승인</button>
+ </div>
+ <div id="reviewList"></div>
+</main>
+
+<main id="parentScreen" class="hidden">
+ <h1>부모 관리 화면</h1>
+ <p class="sub">문제 세트와 학습 환경을 관리합니다.</p>
+ <div class="notice warning">가정용 잠금이며 보안 기능은 아닙니다. 브라우저 저장 데이터에 접근할 수 있는 사용자를 완전히 차단하지는 않습니다.</div>
+ <div class="card">
+  <h2>문제 세트 불러오기</h2>
+  <p class="sub">JSON 파일을 선택하거나 아래 입력창에 문제 세트 JSON을 붙여넣으세요.</p>
+  <div class="field">
+   <label>JSON 파일 선택</label>
+   <input type="file" id="jsonFile" accept=".json,application/json">
+  </div>
+  <div class="field">
+   <label>JSON 내용</label>
+   <textarea id="jsonInput" placeholder='{"setInfo":{...},"questions":[...]}'></textarea>
+  </div>
+  <div class="actions">
+   <button class="btn primary" onclick="importJSON()">검증 후 저장</button>
+   <button class="btn" onclick="document.getElementById('jsonInput').value=''">초기화</button>
+  </div>
+  <div id="importMessage" class="sub" style="margin-top:12px"></div>
+ </div>
+ <div class="card">
+  <h2>저장된 문제 세트 관리</h2>
+  <div id="parentSetList"></div>
+ </div>
+ <div class="card">
+  <h2>학습 설정</h2>
+  <div class="field">
+   <label>기본 제한 시간 (분, 0은 제한 없음)</label>
+   <input type="number" id="timeSetting" min="0" max="300">
+  </div>
+  <div class="field">
+   <label>문항 순서</label>
+   <select id="shuffleSetting">
+    <option value="no">원래 순서</option>
+    <option value="yes">무작위 순서</option>
+   </select>
+  </div>
+  <button class="btn primary" onclick="saveSettings()">설정 저장</button>
+ </div>
+ <div class="card">
+  <h2>부모 비밀번호 변경</h2>
+  <div class="field"><label>새 비밀번호 (4자리 이상)</label><input type="password" id="newPassword" minlength="4" autocomplete="new-password"></div>
+  <button class="btn" onclick="changePassword()">비밀번호 변경</button>
+ </div>
+ <div class="card">
+  <h2>학습 기록 관리</h2>
+  <p class="sub">학습 기록을 삭제하면 누적 점수와 오답노트가 함께 삭제됩니다.</p>
+  <button class="btn danger" onclick="clearRecords()">학습 기록 전체 초기화</button>
+ </div>
+ <button class="btn" onclick="parentLogout()">관리 화면 나가기</button>
+</main>
+
+<div id="printArea" class="hidden"></div>
+<div class="footer">국어 문법 학습 문제은행 · 개인 학습용</div>
+</div>
+
+<div id="passwordModal" class="modal-back hidden">
+ <div class="modal">
+  <h2 id="passwordTitle">부모 비밀번호</h2>
+  <p class="sub" id="passwordDescription">관리 화면에 들어가려면 비밀번호를 입력하세요.</p>
+  <input type="password" id="passwordInput" placeholder="비밀번호 입력" autocomplete="current-password">
+  <p id="passwordError" class="bad" style="font-size:13px"></p>
+  <div class="actions">
+   <button class="btn primary" onclick="confirmPassword()">확인</button>
+   <button class="btn" onclick="closeModal()">취소</button>
+  </div>
+ </div>
+</div>
+
+<script>
+"use strict";
+
+const STORAGE_KEY="koreanGrammarBank_v1";
+const DEFAULT_SET={
+ setInfo:{
+  title:"중3 국어 문법 기초 확인",
+  audience:"child",grade:"중학교 3학년",
+  curriculum:"2015",subject:"국어 문법",
+  difficultyTarget:5,createdAt:"2026-11-20"
+ },
+ questions:[
+  {
+   id:"Q001",subject:"국어",category:"음운",grade:"중3",curriculum:"2015",
+   standard:"음운의 개념과 종류",
+   difficulty:5,type:"mcq",
+   passage:"",
+   stem:"다음 중 음운에 대한 설명으로 가장 적절한 것은?",
+   choices:[
+    "뜻을 가진 가장 작은 말의 단위이다.",
+    "뜻을 구별해 주는 소리의 최소 단위이다.",
+    "문장을 이루는 가장 큰 단위이다.",
+    "문장에서 문법적 관계를 나타내는 단위이다."
+   ],
+   answer:"2",acceptedAnswers:[],
+   answerRationale:"음운은 말의 뜻을 구별해 주는 소리의 최소 단위입니다.",
+   explanation:"예를 들어 '달'과 '말'은 첫소리인 ㄷ과 ㅁ의 차이로 뜻이 달라집니다. 따라서 두 소리는 서로 다른 음운입니다.",
+   concepts:["음운","음운의 개념"],
+   rubric:[],source:"self-created",reviewFlag:"ok",reviewNote:""
+  },
+  {
+   id:"Q002",subject:"국어",category:"품사",grade:"중3",curriculum:"2015",
+   standard:"품사의 분류",
+   difficulty:5,type:"short",
+   passage:"",
+   stem:"다음 문장에서 밑줄 친 말의 품사를 쓰시오.\n'하늘이 매우 푸르다.'에서 '매우'의 품사는 무엇인가?",
+   choices:[],
+   answer:"부사",acceptedAnswers:["부사","부사어가 아닌 부사"],
+   answerRationale:"'매우'는 용언인 '푸르다'의 정도를 꾸며 주는 부사입니다.",
+   explanation:"부사는 주로 용언이나 다른 부사를 꾸며 주며, '매우'는 '푸르다'의 정도를 나타냅니다.",
+   concepts:["품사","부사"],
+   rubric:[],source:"self-created",reviewFlag:"ok",reviewNote:""
+  },
+  {
+   id:"Q003",subject:"국어",category:"문장 성분",grade:"중3",curriculum:"2015",
+   standard:"문장 성분의 이해",
+   difficulty:6,type:"essay",
+   passage:"",
+   stem:"다음 문장에서 주어와 서술어를 각각 찾아 쓰고, 두 문장 성분의 역할을 설명하시오.\n'학생들이 운동장에서 달린다.'",
+   choices:[],
+   answer:"주어: 학생들이 / 서술어: 달린다",
+   acceptedAnswers:[],
+   answerRationale:"'학생들이'는 동작의 주체이고, '달린다'는 주어의 동작을 설명하는 서술어입니다.",
+   explanation:"주어는 문장에서 동작이나 상태의 주체를 나타냅니다. 서술어는 주어의 동작이나 상태, 성질 등을 설명합니다.",
+   concepts:["문장 성분","주어","서술어"],
+   rubric:["주어를 '학생들이'로 정확히 제시 (1점)","서술어를 '달린다'로 정확히 제시 (1점)","주어와 서술어의 역할을 올바르게 설명 (2점)"],
+   source:"self-created",reviewFlag:"ok",reviewNote:""
+  }
+ ]
+};
+
+let db={
+ sets:[],records:[],wrong:[],settings:{time:0,shuffle:false},
+ passwordHash:null,passwordMethod:"plain"
+};
+let currentSet=null,currentQuestions=[],answers={},currentIndex=0;
+let startedAt=0,timerInterval=null,elapsed=0,lastResult=null;
+let parentUnlocked=false,parentTarget="parent",pendingPassword="";
+let sessionQuestions=[];
+
+function safeSave(){
+ try{
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(db));
+ }catch(e){
+  console.warn("저장 실패",e);
+  alert("브라우저 저장 공간에 기록을 저장하지 못했습니다. 브라우저 설정을 확인해 주세요.");
+ }
+}
+function loadDB(){
+ try{
+  const raw=localStorage.getItem(STORAGE_KEY);
+  if(raw){
+   const saved=JSON.parse(raw);
+   if(saved&&typeof saved==="object"){
+    db={...db,...saved};
+    db.settings={time:0,shuffle:false,...(db.settings||{})};
+   }
+  }
+ }catch(e){console.warn("저장 기록을 불러오지 못했습니다.",e)}
+ if(!db.sets.length){
+  db.sets=[structuredCloneSafe(DEFAULT_SET)];
+  safeSave();
+ }
+}
+function structuredCloneSafe(o){return JSON.parse(JSON.stringify(o))}
+function escapeHTML(s){
+ return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function showScreen(name){
+ if(name==="parent"&&!parentUnlocked){parentEntry();return}
+ document.querySelectorAll("main").forEach(e=>e.classList.add("hidden"));
+ const target=document.getElementById(name+"Screen");
+ if(target)target.classList.remove("hidden");
+ document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.screen===name));
+ if(name==="home")renderHome();
+ if(name==="wrong")renderWrong();
+ if(name==="review")renderReview();
+ if(name==="parent")renderParent();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function renderHome(){
+ document.getElementById("totalStudy").textContent=db.records.length;
+ const avg=db.records.length?Math.round(db.records.reduce((a,r)=>a+r.score,0)/db.records.length):"-";
+ document.getElementById("averageScore").textContent=avg==="-"?"-":avg+"점";
+ document.getElementById("wrongCount").textContent=db.wrong.length;
+ document.getElementById("setCount").textContent=db.sets.length+"개 세트";
+ const list=document.getElementById("setList");
+ list.innerHTML="";
+ db.sets.forEach((set,i)=>{
+  const approved=set.questions.filter(q=>q.reviewFlag!=="needs-review"&&q.approved!==false);
+  const pending=set.questions.filter(q=>q.reviewFlag==="needs-review"||q.approved===false).length;
+  const div=document.createElement("div");
+  div.className="set-card";
+  div.innerHTML=`
+   <div><span class="tag blue">${escapeHTML(set.setInfo.subject||"국어")}</span>
+   <span class="tag">${escapeHTML(set.setInfo.curriculum||"unknown")} 개정</span></div>
+   <h3>${escapeHTML(set.setInfo.title)}</h3>
+   <div class="set-meta">${escapeHTML(set.setInfo.grade||"")} · 난이도 ${set.setInfo.difficultyTarget||5}/10</div>
+   <div class="set-meta">출제 가능 ${approved.length}문항 · 검수 대기 ${pending}문항</div>
+   <div class="actions"><button class="btn primary" ${approved.length===0?"disabled":""} onclick="startQuiz(${i})">학습 시작</button>
+   <button class="btn small" onclick="printSet(${i},false)">시험지 인쇄</button>
+   <button class="btn small" onclick="printSet(${i},true)">정답 및 해설 인쇄</button></div>`;
+  list.appendChild(div);
+ });
+}
+function parentEntry(target="parent"){
+ parentTarget=target;
+ if(!db.passwordHash){
+  document.getElementById("passwordTitle").textContent="부모 비밀번호 최초 설정";
+  document.getElementById("passwordDescription").textContent="4자리 이상의 비밀번호를 설정해 주세요.";
+ }else{
+  document.getElementById("passwordTitle").textContent="부모 비밀번호";
+  document.getElementById("passwordDescription").textContent="부모 관리 화면에 들어가려면 비밀번호를 입력하세요.";
+ }
+ document.getElementById("passwordInput").value="";
+ document.getElementById("passwordError").textContent="";
+ document.getElementById("passwordModal").classList.remove("hidden");
+ setTimeout(()=>document.getElementById("passwordInput").focus(),100);
+}
+function closeModal(){document.getElementById("passwordModal").classList.add("hidden")}
+async function hashPassword(pw){
+ if(window.crypto&&crypto.subtle){
+  try{
+   const data=new TextEncoder().encode(pw);
+   const hash=await crypto.subtle.digest("SHA-256",data);
+   return {value:Array.from(new Uint8Array(hash)).map(x=>x.toString(16).padStart(2,"0")).join(""),method:"sha256"};
+  }catch(e){}
+ }
+ let h=2166136261;
+ for(let i=0;i<pw.length;i++){h^=pw.charCodeAt(i);h=Math.imul(h,16777619)}
+ return {value:"fallback-"+(h>>>0).toString(16),method:"fallback"};
+}
+async function confirmPassword(){
+ const pw=document.getElementById("passwordInput").value;
+ const err=document.getElementById("passwordError");
+ if(!db.passwordHash){
+  if(pw.length<4){err.textContent="비밀번호는 4자리 이상이어야 합니다.";return}
+  const result=await hashPassword(pw);
+  db.passwordHash=result.value;db.passwordMethod=result.method;
+  safeSave();parentUnlocked=true;closeModal();
+  showScreen(parentTarget);return;
+ }
+ const result=await hashPassword(pw);
+ if(result.value===db.passwordHash){
+  parentUnlocked=true;closeModal();showScreen(parentTarget);
+ }else{err.textContent="비밀번호가 일치하지 않습니다."}
+}
+function parentLogout(){parentUnlocked=false;showScreen("home")}
+function renderParent(){
+ if(!parentUnlocked)return;
+ document.getElementById("timeSetting").value=db.settings.time;
+ document.getElementById("shuffleSetting").value=db.settings.shuffle?"yes":"no";
+ const list=document.getElementById("parentSetList");
+ list.innerHTML="";
+ db.sets.forEach((s,i)=>{
+  const d=document.createElement("div");
+  d.className="row";
+  d.style.cssText="padding:13px 0;border-bottom:1px solid var(--line)";
+  d.innerHTML=`<div><strong>${escapeHTML(s.setInfo.title)}</strong><div class="sub">${s.questions.length}문항</div></div>
+   <button class="btn danger small" onclick="deleteSet(${i})">삭제</button>`;
+  list.appendChild(d);
+ });
+}
+function saveSettings(){
+ const time=Number(document.getElementById("timeSetting").value);
+ if(!Number.isInteger(time)||time<0||time>300){alert("시간은 0~300분 사이로 입력하세요.");return}
+ db.settings.time=time;
+ db.settings.shuffle=document.getElementById("shuffleSetting").value==="yes";
+ safeSave();alert("설정이 저장되었습니다.");
+}
+async function changePassword(){
+ const pw=document.getElementById("newPassword").value;
+ if(pw.length<4){alert("비밀번호는 4자리 이상이어야 합니다.");return}
+ const result=await hashPassword(pw);
+ db.passwordHash=result.value;db.passwordMethod=result.method;
+ safeSave();
+ document.getElementById("newPassword").value="";
+ alert("비밀번호가 변경되었습니다.");
+}
+function clearRecords(){
+ if(!confirm("모든 학습 기록과 오답노트를 삭제할까요?"))return;
+ db.records=[];db.wrong=[];safeSave();renderParent();
+ alert("학습 기록을 초기화했습니다.");
+}
+function deleteSet(i){
+ if(!confirm("이 문제 세트를 삭제할까요?"))return;
+ db.sets.splice(i,1);safeSave();renderParent();renderHome();
+}
+document.getElementById("jsonFile").addEventListener("change",async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{document.getElementById("jsonInput").value=await file.text();}
+ catch(err){document.getElementById("importMessage").textContent="파일을 읽을 수 없습니다."}
+});
+function validateSet(obj){
+ const errors=[];
+ if(!obj||typeof obj!=="object")return ["최상위 항목: JSON 객체가 아닙니다."];
+ const info=obj.setInfo;
+ if(!info||typeof info!=="object")errors.push("setInfo: 객체가 필요합니다.");
+ else{
+  ["title","audience","grade","curriculum","subject","createdAt"].forEach(k=>{
+   if(typeof info[k]!=="string"||!info[k].trim())errors.push("setInfo."+k+": 필수 문자열이 필요합니다.");
+  });
+  if(!["child","self"].includes(info.audience))errors.push("setInfo.audience: child 또는 self여야 합니다.");
+  if(!["2015","2022","unknown"].includes(info.curriculum))errors.push("setInfo.curriculum: 2015, 2022, unknown 중 하나여야 합니다.");
+  if(typeof info.difficultyTarget!=="number"||info.difficultyTarget<1||info.difficultyTarget>10)errors.push("setInfo.difficultyTarget: 1~10 숫자가 필요합니다.");
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(info.createdAt))errors.push("setInfo.createdAt: YYYY-MM-DD 형식이어야 합니다.");
+ }
+ if(!Array.isArray(obj.questions)||obj.questions.length===0)errors.push("questions: 1개 이상의 문항 배열이 필요합니다.");
+ else{
+  const ids=new Set();
+  obj.questions.forEach((q,i)=>{
+   const p="questions["+(i+1)+"]";
+   if(!q||typeof q!=="object"){errors.push(p+": 객체가 아닙니다.");return}
+   ["id","subject","category","grade","curriculum","standard","stem","answer","answerRationale","explanation","source","reviewFlag","reviewNote"].forEach(k=>{
+    if(typeof q[k]!=="string")errors.push(p+"."+k+": 문자열이 필요합니다.");
+   });
+   if(q.id){
+    if(ids.has(q.id))errors.push(p+".id: 중복된 ID입니다.");
+    ids.add(q.id);
+   }
+   if(!["2015","2022","unknown"].includes(q.curriculum))errors.push(p+".curriculum: 허용되지 않는 값입니다.");
+   if(!Number.isInteger(q.difficulty)||q.difficulty<1||q.difficulty>10)errors.push(p+".difficulty: 1~10 정수가 필요합니다.");
+   if(!["mcq","short","essay","ox"].includes(q.type))errors.push(p+".type: mcq, short, essay, ox 중 하나여야 합니다.");
+   if(!["self-created","user-provided-material"].includes(q.source))errors.push(p+".source: 허용되지 않는 값입니다.");
+   if(!["ok","needs-review"].includes(q.reviewFlag))errors.push(p+".reviewFlag: ok 또는 needs-review여야 합니다.");
+   if(typeof q.stem!=="string"||!q.stem.trim())errors.push(p+".stem: 문제 내용이 필요합니다.");
+   if(!Array.isArray(q.choices))errors.push(p+".choices: 배열이 필요합니다.");
+   if(!Array.isArray(q.acceptedAnswers)||!Array.isArray(q.concepts)||!Array.isArray(q.rubric))errors.push(p+": acceptedAnswers, concepts, rubric은 배열이어야 합니다.");
+   if(q.type==="mcq"){
+    if(!Array.isArray(q.choices)||q.choices.length<2)errors.push(p+".choices: 객관식 보기는 2개 이상이어야 합니다.");
+    if(!Number.isInteger(Number(q.answer))||Number(q.answer)<1||Number(q.answer)>q.choices.length)errors.push(p+".answer: 보기 번호(1부터)를 입력하세요.");
+   }
+   if(q.type==="ox"&&!["O","X","o","x","맞다","아니다","참","거짓"].includes(q.answer))errors.push(p+".answer: O 또는 X 정답을 입력하세요.");
+   if(q.type==="essay"&&!q.rubric.length)errors.push(p+".rubric: 서술형 채점 기준이 필요합니다.");
+   if(q.type!=="mcq"&&q.type!=="ox"&&q.type!=="short"&&q.type!=="essay")errors.push(p+".type: 문항 유형을 확인하세요.");
+  });
+ }
+ return errors;
+}
+function importJSON(){
+ const msg=document.getElementById("importMessage");
+ try{
+  const obj=JSON.parse(document.getElementById("jsonInput").value);
+  const errors=validateSet(obj);
+  if(errors.length){msg.innerHTML="<span class='bad'>검증 실패</span><br>"+errors.map(escapeHTML).join("<br>");return}
+  const copy=structuredCloneSafe(obj);
+  copy.questions.forEach(q=>{if(q.reviewFlag==="needs-review")q.approved=false;else q.approved=false;});
+  db.sets.push(copy);safeSave();
+  msg.innerHTML="<span class='good'>저장 완료!</span> "+escapeHTML(copy.setInfo.title)+" 세트를 저장했습니다. 문항은 검수 화면에서 승인한 뒤 출제됩니다.";
+  document.getElementById("jsonInput").value="";
+  renderParent();
+ }catch(e){msg.innerHTML="<span class='bad'>JSON 형식 오류:</span> "+escapeHTML(e.message)}
+}
+function renderReview(){
+ if(!parentUnlocked){parentEntry("review");return}
+ const list=document.getElementById("reviewList");list.innerHTML="";
+ let total=0,approved=0;
+ db.sets.forEach((s,si)=>{
+  const heading=document.createElement("h3");
+  heading.textContent=s.setInfo.title;
+  list.appendChild(heading);
+  s.questions.forEach((q,qi)=>{
+   total++;if(q.approved===true&&q.reviewFlag==="ok")approved++;
+   const d=document.createElement("div");
+   d.className="review-question";
+   const pending=q.approved!==true||q.reviewFlag==="needs-review";
+   d.innerHTML=`<div class="row"><strong>${escapeHTML(q.id)} · ${escapeHTML(q.category)}</strong>
+   <span class="tag ${pending?"red":"green"}">${pending?"검수 필요":"승인 완료"}</span></div>
+   <p style="margin:9px 0">${escapeHTML(q.stem)}</p>
+   <p class="sub">정답: ${escapeHTML(q.answer)} · 난이도 ${q.difficulty}/10</p>
+   <p class="sub">정답 근거: ${escapeHTML(q.answerRationale||"없음")}</p>
+   <p class="sub">검수 메모: ${escapeHTML(q.reviewNote||"없음")}</p>
+   ${pending?`<button class="btn success small" onclick="approveQuestion(${si},${qi})">이 문항 승인</button>`:`<button class="btn small" onclick="unapproveQuestion(${si},${qi})">승인 취소</button>`}`;
+   list.appendChild(d);
+  });
+ });
+ document.getElementById("reviewStatus").textContent=`${approved}/${total}문항 승인 완료`;
+}
+function approveQuestion(si,qi){
+ const q=db.sets[si].questions[qi];
+ q.approved=true;q.reviewFlag="ok";safeSave();renderReview();renderHome();
+}
+function unapproveQuestion(si,qi){
+ db.sets[si].questions[qi].approved=false;
+ safeSave();renderReview();renderHome();
+}
+function approveAll(){
+ if(!confirm("모든 문항을 승인할까요? 정답과 해설을 확인했는지 다시 점검해 주세요."))return;
+ db.sets.forEach(s=>s.questions.forEach(q=>{q.approved=true;q.reviewFlag="ok";}));
+ safeSave();renderReview();renderHome();
+}
+function startQuiz(i){
+ currentSet=db.sets[i];
+ currentQuestions=currentSet.questions.filter(q=>q.approved===true&&q.reviewFlag==="ok");
+ if(!currentQuestions.length){alert("승인된 문항이 없습니다. 부모 화면에서 먼저 문항을 검수해 주세요.");return}
+ if(db.settings.shuffle)currentQuestions.sort(()=>Math.random()-.5);
+ answers={};currentIndex=0;startedAt=Date.now();elapsed=0;
+ sessionQuestions=currentQuestions.slice();
+ document.getElementById("quizTitle").textContent=currentSet.setInfo.title;
+ document.getElementById("quizSubject").textContent=currentSet.setInfo.subject;
+ showScreen("quiz");
+ renderQuestion();
+ startTimer();
+}
+function startTimer(){
+ clearInterval(timerInterval);
+ timerInterval=setInterval(()=>{
+  elapsed=Math.floor((Date.now()-startedAt)/1000);
+  const limit=Number(db.settings.time||0)*60;
+  const remain=limit?Math.max(0,limit-elapsed):elapsed;
+  const mm=String(Math.floor(remain/60)).padStart(2,"0");
+  const ss=String(remain%60).padStart(2,"0");
+  const el=document.getElementById("timer");
+  el.textContent=mm+":"+ss;
+  el.classList.toggle("warning",!!limit&&remain<=60);
+  if(limit&&remain===0){clearInterval(timerInterval);alert("제한 시간이 끝났습니다. 자동으로 제출합니다.");submitQuiz();}
+ },500);
+}
+function renderQuestion(){
+ const q=currentQuestions[currentIndex];
+ document.getElementById("questionNumber").textContent=`문항 ${currentIndex+1} / ${currentQuestions.length}`;
+ document.getElementById("questionType").textContent={mcq:"객관식",short:"단답형",essay:"서술형",ox:"OX"}[q.type];
+ document.getElementById("progressBar").style.width=((currentIndex+1)/currentQuestions.length*100)+"%";
+ document.getElementById("questionBadges").innerHTML=`<span class="tag">${escapeHTML(q.category)}</span><span class="tag">난이도 ${q.difficulty}/10</span>`;
+ const passage=document.getElementById("passage");
+ passage.textContent=q.passage||"";
+ passage.classList.toggle("hidden",!q.passage);
+ document.getElementById("stem").textContent=q.stem;
+ const area=document.getElementById("answerArea");
+ area.innerHTML="";
+ const value=answers[q.id]??"";
+ if(q.type==="mcq"||q.type==="ox"){
+  const choices=q.type==="ox"?["O","X"]:q.choices;
+  const wrap=document.createElement("div");wrap.className="choices";
+  choices.forEach((c,i)=>{
+   const b=document.createElement("button");
+   b.className="choice"+(String(value)===String(q.type==="ox"?c:i+1)?" selected":"");
+   b.innerHTML=`<span class="num">${q.type==="ox"?c:i+1}</span><span>${escapeHTML(c)}</span>`;
+   b.onclick=()=>{answers[q.id]=q.type==="ox"?c:String(i+1);renderQuestion()};
+   wrap.appendChild(b);
+  });
+  area.appendChild(wrap);
+ }else{
+  const div=document.createElement("div");div.className="answer-input";
+  if(q.type==="short"){
+   div.innerHTML=`<label>정답 입력</label><input id="textAnswer" type="text" placeholder="답을 입력하세요" value="${escapeHTML(value)}">`;
+  }else{
+   div.innerHTML=`<label>서술형 답안</label><textarea id="textAnswer" placeholder="풀이 과정을 작성하세요">${escapeHTML(value)}</textarea>`;
+  }
+  area.appendChild(div);
+  document.getElementById("textAnswer").addEventListener("input",e=>{answers[q.id]=e.target.value});
+ }
+ renderQuestionNav();
+ document.getElementById("answerProgress").textContent=`답변 완료: ${Object.keys(answers).filter(k=>String(answers[k]).trim()!=="").length} / ${currentQuestions.length}`;
+}
+function renderQuestionNav(){
+ const nav=document.getElementById("questionNav");nav.innerHTML="";
+ currentQuestions.forEach((q,i)=>{
+  const b=document.createElement("button");b.className="qnum";
+  if(answers[q.id]!==undefined&&String(answers[q.id]).trim()!=="")b.classList.add("answered");
+  if(i===currentIndex)b.classList.add("current");
+  b.textContent=i+1;b.onclick=()=>{saveVisibleAnswer();currentIndex=i;renderQuestion()};
+  nav.appendChild(b);
+ });
+}
+function saveVisibleAnswer(){
+ const q=currentQuestions[currentIndex];
+ const el=document.getElementById("textAnswer");
+ if(el)answers[q.id]=el.value;
+}
+function moveQuestion(delta){
+ saveVisibleAnswer();
+ const next=currentIndex+delta;
+ if(next<0||next>=currentQuestions.length)return;
+ currentIndex=next;renderQuestion();
+}
+function normalize(s){return String(s??"").trim().replace(/\s+/g,"").toLowerCase().replace(/[.,!?·]/g,"")}
+function isCorrect(q,value){
+ if(value===undefined||String(value).trim()==="")return false;
+ if(q.type==="mcq")return Number(value)===Number(q.answer);
+ if(q.type==="ox"){
+  const norm=s=>({o:"o",x:"x","맞다":"o","참":"o","아니다":"x","거짓":"x"}[String(s).toLowerCase()]||String(s).toLowerCase());
+  return norm(value)===norm(q.answer);
+ }
+ if(q.type==="short"){
+  return [q.answer,...(q.acceptedAnswers||[])].some(a=>normalize(a)===normalize(value));
+ }
+ return false;
+}
+function submitQuiz(){
+ if(!currentQuestions.length)return;
+ saveVisibleAnswer();
+ const unanswered=currentQuestions.filter(q=>answers[q.id]===undefined||String(answers[q.id]).trim()==="").length;
+ if(unanswered&&!confirm(`답하지 않은 문항이 ${unanswered}개 있습니다. 제출할까요?`))return;
+ clearInterval(timerInterval);
+ const results=[];
+ let total=0,correct=0;
+ currentQuestions.forEach(q=>{
+  let score=0,correctFlag=false;
+  if(q.type==="essay"){
+   const rubric=q.rubric||[];
+   const selected=answers[q.id+"_rubric"]||[];
+   score=selected.reduce((a,v)=>a+(Number(v)||0),0);
+   total+=rubric.length;
+   correct+=score;
+  }else{
+   total++;
+   correctFlag=isCorrect(q,answers[q.id]);
+   score=correctFlag?1:0;
+   correct+=score;
+  }
+  results.push({q,answer:answers[q.id]??"",score,correct:correctFlag});
+ });
+ const percent=total?Math.round(correct/total*100):0;
+ lastResult={results,score:percent,correct,total,elapsed};
+ db.records.push({title:currentSet.setInfo.title,score:percent,date:new Date().toISOString(),elapsed});
+ results.forEach(r=>{
+  if(r.q.type!=="essay"&&!r.correct){
+   const key=currentSet.setInfo.title+"|"+r.q.id;
+   const existing=db.wrong.find(w=>w.key===key);
+   const item={
+    key,setTitle:currentSet.setInfo.title,
+    question:structuredCloneSafe(r.q),
+    userAnswer:r.answer,updatedAt:new Date().toISOString()
+   };
+   if(existing)Object.assign(existing,item);
+   else db.wrong.push(item);
+  }else if(r.q.type!=="essay"&&r.correct){
+   db.wrong=db.wrong.filter(w=>w.key!==currentSet.setInfo.title+"|"+r.q.id);
+  }
+ });
+ safeSave();renderResult();showScreen("result");
+}
+function renderResult(){
+ const r=lastResult;
+ document.getElementById("resultTitle").textContent=currentSet.setInfo.title;
+ document.getElementById("score").textContent=r.score+"점";
+ document.getElementById("scoreDetail").textContent=`총 ${r.total}점 중 ${r.correct}점 획득`;
+ document.getElementById("correctNum").textContent=r.correct;
+ document.getElementById("incorrectNum").textContent=r.total-r.correct;
+ document.getElementById("elapsedTime").textContent=formatTime(r.elapsed);
+ const categories={};
+ r.results.forEach(item=>{
+  const c=item.q.category||"기타";
+  if(!categories[c])categories[c]={all:0,correct:0};
+  if(item.q.type==="essay"){
+   categories[c].all+=(item.q.rubric||[]).length;
+   categories[c].correct+=item.score;
+  }else{
+   categories[c].all++;
+   if(item.correct)categories[c].correct++;
+  }
+ });
+ const cat=document.getElementById("categoryResults");cat.innerHTML="";
+ Object.entries(categories).forEach(([name,v])=>{
+  const pct=v.all?Math.round(v.correct/v.all*100):0;
+  const d=document.createElement("div");d.className="category-bar";
+  d.innerHTML=`<div class="row"><strong>${escapeHTML(name)}</strong><span>${pct}% (${v.correct}/${v.all})</span></div><div class="bar"><span style="width:${pct}%"></span></div>`;
+  cat.appendChild(d);
+ });
+ const details=document.getElementById("resultDetails");details.innerHTML="";
+ r.results.forEach((item,i)=>{
+  const q=item.q;
+  const d=document.createElement("div");d.className="result-item";
+  let status;
+  if(q.type==="essay")status=`자기 채점 ${item.score}/${q.rubric.length}점`;
+  else status=item.correct?"정답":"오답";
+  const userText=item.answer===""?"미응답":item.answer;
+  d.innerHTML=`
+   <div class="row"><strong>${i+1}. ${escapeHTML(q.category)}</strong>
+   <span class="${item.correct||q.type==="essay"?"good":"bad"}">${status}</span></div>
+   <p style="white-space:pre-wrap">${escapeHTML(q.stem)}</p>
+   <div class="answer">내 답: ${escapeHTML(userText)}</div>
+   <div class="answer">정답: <strong>${escapeHTML(q.answer)}</strong></div>
+   <div class="answer"><strong>정답 근거</strong><br>${escapeHTML(q.answerRationale)}</div>
+   <div class="answer"><strong>해설</strong><br>${escapeHTML(q.explanation)}</div>
+   <div class="concept-list">${(q.concepts||[]).map(c=>`<span class="tag">${escapeHTML(c)}</span>`).join("")}</div>`;
+  details.appendChild(d);
+ });
+}
+function formatTime(seconds){
+ return String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");
+}
+function retakeCurrent(){
+ const index=db.sets.findIndex(s=>s.setInfo.title===currentSet.setInfo.title);
+ if(index>=0)startQuiz(index);
+}
+function renderWrong(){
+ const filter=document.getElementById("wrongFilter");
+ const old=filter.value;
+ const concepts=[...new Set(db.wrong.flatMap(w=>w.question.concepts||[]))];
+ filter.innerHTML='<option value="all">전체 개념</option>'+concepts.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
+ if(concepts.includes(old))filter.value=old;
+ const selected=filter.value;
+ const list=document.getElementById("wrongList");list.innerHTML="";
+ const items=db.wrong.filter(w=>selected==="all"||(w.question.concepts||[]).includes(selected));
+ if(!items.length){list.innerHTML='<div class="empty">저장된 오답이 없습니다.<br>문제를 풀고 틀린 문제를 모아 보세요.</div>';return}
+ items.forEach((w,i)=>{
+  const q=w.question;
+  const d=document.createElement("div");d.className="wrong-card";
+  d.innerHTML=`<div class="row"><span class="tag red">오답</span><span class="sub">${escapeHTML(w.setTitle)}</span></div>
+   <h3>${escapeHTML(q.stem)}</h3>
+   <div class="sub">내 답: ${escapeHTML(w.userAnswer||"미응답")}</div>
+   <p style="margin:10px 0"><strong>정답:</strong> ${escapeHTML(q.answer)}</p>
+   <p class="sub"><strong>정답 근거</strong><br>${escapeHTML(q.answerRationale)}</p>
+   <p class="sub"><strong>해설</strong><br>${escapeHTML(q.explanation)}</p>
+   <div class="concept-list">${(q.concepts||[]).map(c=>`<span class="tag blue">${escapeHTML(c)}</span>`).join("")}</div>
+   <div class="actions"><button class="btn primary small" onclick="retryWrong('${encodeURIComponent(w.key)}')">다시 풀기</button>
+   <button class="btn small" onclick="removeWrong('${encodeURIComponent(w.key)}')">오답 삭제</button></div>`;
+  list.appendChild(d);
+ });
+}
+function retryWrong(encoded){
+ const key=decodeURIComponent(encoded);
+ const item=db.wrong.find(w=>w.key===key);
+ if(!item)return;
+ currentSet={setInfo:{title:"오답 다시 풀기",subject:"국어"}};
+ currentQuestions=[item.question];answers={};currentIndex=0;
+ startedAt=Date.now();elapsed=0;sessionQuestions=currentQuestions.slice();
+ showScreen("quiz");renderQuestion();startTimer();
+}
+function removeWrong(encoded){
+ const key=decodeURIComponent(encoded);
+ db.wrong=db.wrong.filter(w=>w.key!==key);
+ safeSave();renderWrong();
+}
+function printSet(i,withAnswers){
+ const s=db.sets[i];
+ const approved=s.questions.filter(q=>q.approved===true&&q.reviewFlag==="ok");
+ if(!approved.length){alert("승인된 문항이 없습니다.");return}
+ const area=document.getElementById("printArea");
+ let html=`<div class="print-header"><h1>${escapeHTML(s.setInfo.title)}</h1><p>국어 문법 학습 평가</p></div>
+ <div class="print-info"><span>이름: __________________</span><span>점수: __________</span><span>날짜: __________</span></div>`;
+ if(withAnswers){
+  html+=`<h2>정답 및 해설</h2>`;
+  approved.forEach((q,n)=>{
+   html+=`<div class="print-key"><strong>${n+1}. ${escapeHTML(q.answer)}</strong>
+   <p>${escapeHTML(q.answerRationale)}</p><p>${escapeHTML(q.explanation)}</p>
+   <p>핵심 개념: ${escapeHTML((q.concepts||[]).join(", "))}</p></div>`;
+  });
+ }else{
+  html+='<div class="print-grid">';
+  approved.forEach((q,n)=>{
+   html+=`<div class="print-question"><h3>${n+1}. ${escapeHTML(q.stem)}</h3>
+   ${q.passage?`<p>${escapeHTML(q.passage)}</p>`:""}
+   ${q.type==="mcq"?q.choices.map((c,j)=>`<div class="print-choice">${j+1}. ${escapeHTML(c)}</div>`).join(""):""}
+   ${q.type==="ox"?"<div class='print-choice'>① O　　② X</div>":""}
+   <div class="print-answer">답안: </div></div>`;
+  });
+  html+="</div>";
+ }
+ area.innerHTML=html;
+ area.classList.remove("hidden");
+ window.print();
+ setTimeout(()=>area.classList.add("hidden"),1000);
+}
+window.addEventListener("afterprint",()=>document.getElementById("printArea").classList.add("hidden
